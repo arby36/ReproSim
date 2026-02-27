@@ -132,7 +132,7 @@ class Greeble {
                     console.log("Greeble " + this.greebleID + " died due to lack of care.");
                 }
             } else if (this.selection === "K") {
-                if (Math.random() < growthChance * 0.1) {
+                if (Math.random() < growthChance * 0.5) {
                     this.adult = true;
                     const newGreebleImg = new Image();
                     newGreebleImg.onload = function () {
