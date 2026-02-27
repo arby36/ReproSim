@@ -271,7 +271,7 @@ class Greeble {
     fission(localSettings) {
         if (this.cooldown === false) {
             if (this.selection === "r") {
-                this.produce(getRandomIntInclusive(5, 10), localSettings);
+                this.produce(getRandomIntInclusive(10, 50), localSettings);
             } else if (this.selection === "K") {
                 this.produce(getRandomIntInclusive(0, 2), localSettings);
             }
