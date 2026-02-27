@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ReproSim</title>
+    <script src="js/konva.min.js"></script>
+    <link rel="stylesheet" href="css/uikit.min.css" />
+    <script src="js/uikit.min.js"></script>
+    <script src="js/uikit-icons.min.js"></script>
+    <script src="js/plotly-3.3.0.min.js" charset="utf-8"></script>
+</head>
+<body>
+    <!-- Landing Modal -->
+    <div class="uk-modal-full" id="landing-modal" uk-modal>
+        <div class="uk-modal-dialog uk-height-viewport">
+            <div class="uk-modal-header">
+                <h2 class="uk-modal-title">ReproSim</h2>
+            </div>
+            <div class="uk-modal-body">
+                <h3>Welcome to ReproSim!</h3>
+                <p>
+                    Congratulations, scientists! Your achievement of creating an animal, the Greeble, 
+                    from only non-living materials will go down in history. But now, you must determine
+                    how to reproduce your creation. 
+                </p>
+                <img src="assets/greeble-large.gif">
+                <h5>How to Play</h5>
+                <p>
+                    In this simulation, you will control the <b>reproductive characteristics</b> of a population of greebles. <br /><br />
+                    There are several options that you can change; <b>hover over the options' titles</b> to learn more about them.
+                    Once you have chosen your settings, click "Start" to see how your greebles fare. <br /><br />
+                    You can stop the simulation at any time to change your settings. <br /><br />
+                    While following your greebles, keep an eye on the <b>population graph</b> to see how your settings affect the dynamics of your greebles' population. <br /><br />
+                    Can you create a thriving population of greebles? Or will your greebles go extinct? The choice is yours! <br /><br />
+                    Ready to play? Click the X in the top right corner.
+                </p>
+                <h5>About the simulation</h5>
+                <p>
+                    ReproSim is an agent-based simulation. Each greeble is an individual agent that moves semi-randomly around the environment.
+                    Asexually-reproducing greebles have a chance to reproduce each time they move, while sexually-reproducing greebles must contact another greeble of the opposite sex to reproduce. 
+                    Greebles must reach adulthood to reproduce, and the chance of reaching adulthood is determined by the genetic diversity and selection strategy of the population.
+                    Each greeble also has a chance to die each time they move, and overpopulation will cause greebles to die more often. 
+                    The population graph tracks the total population of greebles over time.
+                </p>
+                <h5>Credits</h5>
+                <p>
+                    UI developed using <a href="https://getuikit.com/">UIkit</a>. Simulation developed using <a href="https://konvajs.org/">Konva.js</a>. Graphs developed using <a href="https://plotly.com/javascript/">Plotly.js</a>. Some coding assistance was provided by Github Copilot, but most code was written, and all code was verified, by Alex Bruce.
+                </p>
+                <button class="uk-modal-close-full uk-close-large" type="button" uk-close></button>
+            </div>
+        </div>
+    </div>
+
+    <div class="uk-child-width-expand@s uk-margin-left uk-margin-right uk-margin-top uk-margin-bottom" uk-grid>
+        <div class="uk-width-1-3@s">
+            <div class="uk-card uk-card-default uk-card-body uk-margin-bottom">
+                <h3 class="uk-card-title">Simulation Control</img></h3>
+                <button class="uk-button uk-button-default" id="button-start" onclick="startUI(this)">Start</button>
+                <button class="uk-button uk-button-default" id="button-stop" onclick="stopUI()" disabled>Stop</button>
+                <button class="uk-button uk-button-default" id="button-reset" onclick="resetUI()">Reset</button>
+                <dl class="uk-description-list">
+                    <dt uk-tooltip="The total number of greebles, both adult and immature.">Adult Greeble</dt>
+                    <dd><img src="assets/greeble-small.png" width="16" height="16"> Able to reproduce</dd>
+                    <dt uk-tooltip="">Immature Greeble</dt>
+                    <dd><img src="assets/greeble-young-small.png" width="16" height="16"> Cannot yet reproduce</dd>
+                </dl>
+            </div>
+            <div class="uk-card uk-card-default uk-card-body">
+                <h3 class="uk-card-title" id="a-name">Greeble Settings <img src="assets/greeble-large.gif"></img></h3>
+                <!-- <input class="uk-input" type="text" placeholder="Rename" aria-label="Rename" onchange="changeStrainName('a', this.value)"> -->
+                <dl class="uk-description-list">
+                    <dt uk-tooltip="The total number of greebles, both adult and immature.">Population</dt>
+                    <dd id="population">2</dd>
+                    <!--
+                    <dt>Energy</dt>
+                    <dd><progress class="uk-progress" id="a-energy" value="50" max="100"></progress></dd>
+                    -->
+                    <dt uk-tooltip="A lower genetic diversity causes more greebles to die immaturely due to lethal mutations.">Genetic Diversity</dt>
+                    <dd><progress class="uk-progress" id="a-diversity" value="50" max="100"></progress></dd>
+                </dl>
+                <ul class="uk-accordion-default" uk-accordion>
+                    <li class="uk-open">
+                        <a class="uk-accordion-title" href>Basic Options</a>
+                        <div class="uk-accordion-content">
+                            <div>
+                                <h5 uk-tooltip="Asexual greebles reproduce by themselves. Sexual greebles require contact with a greeble of the opposite sex to reproduce, which increases genetic diversity.">Type</h5>
+                                <div class="uk-margin">
+                                    <select class="uk-select" aria-label="Select" id="a-repro-strategy" onchange="changeReproStrategy('a', this.value)">
+                                        <option>Asexual</option>
+                                        <option>Sexual</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <h5 uk-tooltip="r-selected greebles have large litters, but they are more likely to die immaturely. K-selected greebles are cared for through immaturity, and are more likely to survive. However, K-selected greebles have smaller litters.">Selection</h5>
+                                <div class="uk-margin">
+                                    <select class="uk-select" aria-label="Select" id="a-selection" onchange="changeSelection('a', this.value)">
+                                        <option>r</option>
+                                        <option>K</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li>
+                        <a class="uk-accordion-title" href>Advanced Options</a>
+                        <div class="uk-accordion-content">
+                            <h5 uk-tooltip="Semelparous greebles invest so much energy into reproduction that they die after reproducing. However, they produce greater numbers of offspring per litter. Iteroparous greebles can reproduce several times.">Semelparity</h5>
+                            <div class="uk-margin">
+                                <select class="uk-select" aria-label="Select" id="death-follows" onchange="changeSemelparityUI(this.value)">
+                                    <option>Iteroparous</option>
+                                    <option>Semelparous</option>
+                                </select>
+                            </div>
+                            <h5 uk-tooltip="Internal fertilization occurs within the body of the female greeble, so two greebles of different sexes must contact. External fertilization occurs outside of the greeble, so two greebles of different sexes need only be near each other. However, external fertilization is less effective.">Place of fertilization</h5>
+                            <div class="uk-margin">
+                                <select class="uk-select" aria-label="Select" id="fertilization" onchange="changeFertilizationUI(this.value)">
+                                    <option>Internal</option>
+                                    <option>External</option>
+                                </select>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="uk-width-expand">
+            <div id="simulation-container">
+                
+            </div>
+        </div>
+        <div class="uk-width-1-3@s">
+            <div class="uk-card uk-card-default uk-card-body uk-margin-bottom">
+                <h3 class="uk-card-title">Graphs</h3>
+                <div id="population-graph"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="source.js"></script>
+</body>
+</html>
+
