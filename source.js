@@ -495,7 +495,7 @@ function tick() {
         if (greeble.adult && Math.random() < 0.001) {
             greeble.die();
         }
-        if (greebles.length > 500 && Math.random() < 0.5) {
+        if (greebles.length > 200 && Math.random() < 0.5) {
             greeble.die();
         }
     });
