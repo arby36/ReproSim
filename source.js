@@ -132,7 +132,7 @@ class Greeble {
                     console.log("Greeble " + this.greebleID + " died due to lack of care.");
                 }
             } else if (this.selection === "K") {
-                if (Math.random() < growthChance * 0.5) {
+                if (Math.random() < growthChance * 0.25) {
                     this.adult = true;
                     const newGreebleImg = new Image();
                     newGreebleImg.onload = function () {
@@ -234,7 +234,7 @@ class Greeble {
     };
     produce(n, settingsLocal) {
         if (this.semelparity) {
-            for (let i = 0; i < n + 1 * getRandomIntInclusive(2, 10); i++) {
+            for (let i = 0; i < (n + 1) * getRandomIntInclusive(5, 10); i++) {
                 greebles.push(new Greeble(this.x, this.y, settingsLocal));
             }
             this.die();
@@ -247,7 +247,7 @@ class Greeble {
     internalFertilization(localSettings) {
         if (this.cooldown === false) {
             if (this.selection === "r") {
-                this.produce(getRandomIntInclusive(10, 50), localSettings);
+                this.produce(getRandomIntInclusive(50, 100), localSettings);
             } else if (this.selection === "K") {
                 this.produce(getRandomIntInclusive(0, 2), localSettings);
             }
@@ -258,7 +258,7 @@ class Greeble {
     externalFertilization(localSettings) {
         if (this.cooldown === false && Math.random() < 0.1) {
             if (this.selection === "r") {
-                this.produce(getRandomIntInclusive(10, 50), localSettings);
+                this.produce(getRandomIntInclusive(50, 100), localSettings);
             } else if (this.selection === "K") {
                 this.produce(getRandomIntInclusive(0, 2), localSettings);
             }
@@ -271,7 +271,7 @@ class Greeble {
     fission(localSettings) {
         if (this.cooldown === false) {
             if (this.selection === "r") {
-                this.produce(getRandomIntInclusive(10, 50), localSettings);
+                this.produce(getRandomIntInclusive(50, 100), localSettings);
             } else if (this.selection === "K") {
                 this.produce(getRandomIntInclusive(0, 2), localSettings);
             }
