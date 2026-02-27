@@ -234,7 +234,7 @@ class Greeble {
     };
     produce(n, settingsLocal) {
         if (this.semelparity) {
-            for (let i = 0; i < n + 1 * getRandomIntInclusive(1, 10); i++) {
+            for (let i = 0; i < n + 1 * getRandomIntInclusive(2, 10); i++) {
                 greebles.push(new Greeble(this.x, this.y, settingsLocal));
             }
             this.die();
