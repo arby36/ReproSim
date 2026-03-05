@@ -113,7 +113,7 @@ class Greeble {
             let growthChance = localSettings.diversity / 100;
 
             if (this.selection === "r") {
-                if (Math.random() < 0.005) {
+                if (Math.random() < 0.05) {
                     if (Math.random() < growthChance) {
                         this.adult = true;
                         const newGreebleImg = new Image();
@@ -132,7 +132,7 @@ class Greeble {
                     console.log("Greeble " + this.greebleID + " died due to lack of care.");
                 }
             } else if (this.selection === "K") {
-                if (Math.random() < growthChance * 0.25) {
+                if (Math.random() < growthChance * 0.5) {
                     this.adult = true;
                     const newGreebleImg = new Image();
                     newGreebleImg.onload = function () {
@@ -247,7 +247,7 @@ class Greeble {
     internalFertilization(localSettings) {
         if (this.cooldown === false) {
             if (this.selection === "r") {
-                this.produce(getRandomIntInclusive(50, 100), localSettings);
+                this.produce(getRandomIntInclusive(10, 50), localSettings);
             } else if (this.selection === "K") {
                 this.produce(getRandomIntInclusive(0, 2), localSettings);
             }
@@ -258,7 +258,7 @@ class Greeble {
     externalFertilization(localSettings) {
         if (this.cooldown === false && Math.random() < 0.1) {
             if (this.selection === "r") {
-                this.produce(getRandomIntInclusive(50, 100), localSettings);
+                this.produce(getRandomIntInclusive(10, 50), localSettings);
             } else if (this.selection === "K") {
                 this.produce(getRandomIntInclusive(0, 2), localSettings);
             }
@@ -271,7 +271,7 @@ class Greeble {
     fission(localSettings) {
         if (this.cooldown === false) {
             if (this.selection === "r") {
-                this.produce(getRandomIntInclusive(50, 100), localSettings);
+                this.produce(getRandomIntInclusive(10, 50), localSettings);
             } else if (this.selection === "K") {
                 this.produce(getRandomIntInclusive(0, 2), localSettings);
             }
@@ -306,11 +306,11 @@ function changeReproStrategy (strain, strategy) {
     if (strain === "a" && strategy === "Sexual") {
         settings.reproStrategy = strategy;
         // settings.changeEnergyMag(-25);
-        settings.changeDiversity(25);
+        settings.changeDiversity(15);
     } else if (strain === "a" && strategy === "Asexual") {
         settings.reproStrategy = strategy;
         // settings.changeEnergyMag(25);
-        settings.changeDiversity(-25);
+        settings.changeDiversity(-15);
     }
 }
 
@@ -461,7 +461,7 @@ function tick() {
     greebles.forEach(greeble => {
         greeble.walk();
         if (greeble.cooldown === true) {
-            if (Math.random() < 0.01) {
+            if (Math.random() < 0.005) {
                 greeble.cooldown = false;
                 console.log("Greeble " + greeble.greebleID + " is no longer on cooldown.");
             }
@@ -495,7 +495,7 @@ function tick() {
         if (greeble.adult && Math.random() < 0.001) {
             greeble.die();
         }
-        if (greebles.length > 200 && Math.random() < 0.5) {
+        if (greeble.adult == false && greebles.length > 300 && Math.random() < 0.5) {
             greeble.die();
         }
     });
